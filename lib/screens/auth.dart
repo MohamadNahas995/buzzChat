@@ -1,4 +1,5 @@
 import 'package:chatty/screens/chat.dart';
+import 'package:chatty/screens/profile_setup.dart';
 import 'package:chatty/widgets/user_image_picker.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -21,80 +22,39 @@ class _AuthScreenState extends State<AuthScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   var _isLogin = true;
-  File? _userImageFile;
-  var _isLoading = false;
 
   void _submit() async {
     final isValid = _formKey.currentState!.validate();
-    if (!isValid || !_isLogin && _userImageFile == null) {
+    print(isValid.toString());
+    print(_isLogin.toString());
+    if (!isValid) {
       return;
     }
 
     _formKey.currentState!.save();
-    try {
-      setState(() {
-        _isLoading = true;
-      });
-      if (_isLogin) {
-        final userCredential = await _auth.signInWithEmailAndPassword(
-            email: _emailController.text, password: _passwordController.text);
-      } else {
-        final userCredential = await _auth.createUserWithEmailAndPassword(
-            email: _emailController.text, password: _passwordController.text);
 
-        final storageRef = FirebaseStorage.instance
-            .ref()
-            .child('user_images')
-            .child('${userCredential.user!.uid}.jpg');
+    if (_isLogin) {
+      final userCredential = await _auth.signInWithEmailAndPassword(
+          email: _emailController.text, password: _passwordController.text);
+    } else {
+      final userCredential = await _auth.createUserWithEmailAndPassword(
+          email: _emailController.text, password: _passwordController.text);
+      userCredential.user!.updateDisplayName(_userNameController.text);
 
-        await storageRef.putFile(_userImageFile!);
-
-        final imageUrl = await storageRef.getDownloadURL();
-
-        FirebaseFirestore.instance
-            .collection('users')
-            .doc(userCredential.user!.uid)
-            .set({
-          'username': _userNameController.text,
-          'email': _emailController.text,
-          'image_url': imageUrl,
-        });
-        if (_auth.currentUser != null) {
-          _auth.currentUser!.updateProfile(
-              displayName: _userNameController.text, photoURL: imageUrl);
-
-          _auth.currentUser!.sendEmailVerification();
-        }
-      }
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'weak-password') {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('The password provided is too weak.')),
-        );
-      } else if (e.code == 'email-already-in-use') {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-              content: Text('The account already exists for that email.')),
-        );
-      } else if (e.code == 'invalid-email') {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Invalid email.')),
-        );
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text(e.message ?? 'An unknown error occurred.'),
-        ));
-      }
-      setState(() {
-        _isLoading = false;
-      });
+      Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => ProfileSetup(
+                emailController: _emailController.text,
+                passwordController: _passwordController.text,
+                userNameController: _userNameController.text,
+              )));
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 240, 162, 162),
+      backgroundColor: const Color.fromARGB(
+          255, 255, 246, 84), //const Color.fromARGB(255, 255, 246, 84),
       body: Center(
         child: SingleChildScrollView(
           child: Column(
@@ -107,6 +67,7 @@ class _AuthScreenState extends State<AuthScreen> {
                 child: Image.asset('assets/chat.png'),
               ),
               Card(
+                color: const Color.fromARGB(255, 250, 244, 198),
                 margin: EdgeInsets.all(20),
                 child: SingleChildScrollView(
                   child: Padding(
@@ -116,13 +77,6 @@ class _AuthScreenState extends State<AuthScreen> {
                         child: Column(
                           mainAxisSize: MainAxisSize.max,
                           children: [
-                            !_isLogin
-                                ? UserImagePicker(
-                                    pickImage: (image) {
-                                      _userImageFile = image;
-                                    },
-                                  )
-                                : const SizedBox(),
                             !_isLogin
                                 ? TextFormField(
                                     onChanged: (value) {
@@ -165,22 +119,6 @@ class _AuthScreenState extends State<AuthScreen> {
                                 _emailController.text = value!;
                               },
                             ),
-                            !_isLogin
-                                ? TextFormField(
-                                    validator: (value) {
-                                      if (value != _emailController.text) {
-                                        return 'Please enter valid confirm email';
-                                      }
-                                      return null;
-                                    },
-                                    decoration: InputDecoration(
-                                        label: Text('Confirm email')),
-                                    keyboardType: TextInputType.emailAddress,
-                                    autocorrect: false,
-                                    textCapitalization: TextCapitalization.none,
-                                    onSaved: (value) {},
-                                  )
-                                : const SizedBox(),
                             TextFormField(
                               validator: (value) {
                                 if (value == null || value.trim().isEmpty) {
@@ -198,15 +136,12 @@ class _AuthScreenState extends State<AuthScreen> {
                             SizedBox(
                               height: 12,
                             ),
-                            if (_isLoading)
-                              CircularProgressIndicator()
-                            else
-                              ElevatedButton(
-                                  style: ButtonStyle(
-                                      backgroundColor: WidgetStatePropertyAll(
-                                          Color.fromARGB(255, 240, 162, 162))),
-                                  onPressed: _submit,
-                                  child: Text(_isLogin ? 'Login' : 'Sign up')),
+                            ElevatedButton(
+                                style: ButtonStyle(
+                                    backgroundColor: WidgetStatePropertyAll(
+                                        Color.fromRGBO(244, 221, 180, 1))),
+                                onPressed: _submit,
+                                child: Text(_isLogin ? 'Login' : 'Sign up')),
                             TextButton(
                                 onPressed: () {
                                   setState(() {

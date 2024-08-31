@@ -1,4 +1,4 @@
-import 'package:chatty/widgets/chat_messages.dart';
+/*import 'package:chatty/widgets/chat_messages.dart';
 import 'package:chatty/widgets/new_message.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -15,21 +15,18 @@ class ChatScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        actions: [
-          IconButton(
-              onPressed: () {
-                _auth.signOut();
-              },
-              icon: const Icon(Icons.exit_to_app))
-        ],
+        backgroundColor: Theme.of(context).primaryColor,
         title: const Text('Chat'),
       ),
       body: Column(
         children: [
           Expanded(child: ChatMessages()),
-          NewMessage(),
+          NewMessage(
+            sentFor: 'sdads',
+          ),
         ],
       ),
     );
   }
 }
+*/

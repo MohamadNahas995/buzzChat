@@ -3,8 +3,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class NewMessage extends StatefulWidget {
-  const NewMessage({super.key});
+  const NewMessage({required this.sentFor, super.key});
 
+  final String sentFor;
   @override
   State<NewMessage> createState() => _NewMessageState();
 }
@@ -40,6 +41,7 @@ class _NewMessageState extends State<NewMessage> {
         'userId': FirebaseAuth.instance.currentUser!.uid,
         'username': FirebaseAuth.instance.currentUser!.displayName,
         'userImage': FirebaseAuth.instance.currentUser!.photoURL,
+        'sentFor': widget.sentFor
       });
     } catch (e) {
       print(e.toString());
@@ -65,7 +67,6 @@ class _NewMessageState extends State<NewMessage> {
           IconButton(
             onPressed: submitMessage,
             icon: Icon(Icons.send),
-            color: Colors.blue,
           )
         ],
       ),
