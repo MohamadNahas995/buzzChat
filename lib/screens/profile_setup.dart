@@ -15,7 +15,6 @@ class ProfileSetup extends StatefulWidget {
   final userNameController;
   final emailController;
   final passwordController;
-
   @override
   State<ProfileSetup> createState() => _ProfileSetupState();
 }
