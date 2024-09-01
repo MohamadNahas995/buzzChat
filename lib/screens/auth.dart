@@ -1,4 +1,4 @@
-import 'package:chatty/screens/chat.dart';
+import 'package:chatty/noNeed/chat.dart';
 import 'package:chatty/screens/profile_setup.dart';
 import 'package:chatty/widgets/user_image_picker.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -54,7 +54,7 @@ class _AuthScreenState extends State<AuthScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color.fromARGB(
-          255, 255, 246, 84), //const Color.fromARGB(255, 255, 246, 84),
+          255, 255, 253, 255), //const Color.fromARGB(255, 255, 246, 84),
       body: Center(
         child: SingleChildScrollView(
           child: Column(
@@ -67,7 +67,7 @@ class _AuthScreenState extends State<AuthScreen> {
                 child: Image.asset('assets/chat.png'),
               ),
               Card(
-                color: const Color.fromARGB(255, 250, 244, 198),
+                color: const Color.fromARGB(255, 231, 185, 79),
                 margin: EdgeInsets.all(20),
                 child: SingleChildScrollView(
                   child: Padding(
@@ -91,7 +91,13 @@ class _AuthScreenState extends State<AuthScreen> {
                                       return null;
                                     },
                                     decoration: InputDecoration(
-                                        label: Text('Username')),
+                                        label: Text(
+                                      'Username',
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w500),
+                                    )),
                                     enableSuggestions: false,
                                     autocorrect: false,
                                     onSaved: (value) {
@@ -111,7 +117,12 @@ class _AuthScreenState extends State<AuthScreen> {
                                 }
                                 return null;
                               },
-                              decoration: InputDecoration(label: Text('Email')),
+                              decoration: InputDecoration(
+                                  label: Text('Email',
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w500))),
                               keyboardType: TextInputType.emailAddress,
                               autocorrect: false,
                               textCapitalization: TextCapitalization.none,
@@ -126,8 +137,12 @@ class _AuthScreenState extends State<AuthScreen> {
                                 }
                                 return null;
                               },
-                              decoration:
-                                  InputDecoration(label: Text('password')),
+                              decoration: InputDecoration(
+                                  label: Text('password',
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w500))),
                               obscureText: true,
                               onSaved: (value) {
                                 _passwordController.text = value!;
@@ -139,18 +154,28 @@ class _AuthScreenState extends State<AuthScreen> {
                             ElevatedButton(
                                 style: ButtonStyle(
                                     backgroundColor: WidgetStatePropertyAll(
-                                        Color.fromRGBO(244, 221, 180, 1))),
+                                        Color.fromRGBO(236, 232, 225, 1))),
                                 onPressed: _submit,
-                                child: Text(_isLogin ? 'Login' : 'Sign up')),
+                                child: Text(_isLogin ? 'Login' : 'Sign up',
+                                    style: TextStyle(
+                                        color: Colors.orange,
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w500))),
                             TextButton(
                                 onPressed: () {
                                   setState(() {
                                     _isLogin = !_isLogin;
                                   });
                                 },
-                                child: Text(_isLogin
-                                    ? 'Create new account'
-                                    : 'Already have an account'))
+                                child: Text(
+                                    _isLogin
+                                        ? 'Create new account'
+                                        : 'Already have an account',
+                                    style: TextStyle(
+                                        color: const Color.fromARGB(
+                                            255, 255, 255, 255),
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w900)))
                           ],
                         )),
                   ),

@@ -3,19 +3,21 @@ import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 
 class UserImagePicker extends StatefulWidget {
-  const UserImagePicker({super.key, required this.pickImage});
+  const UserImagePicker(
+      {super.key, required this.radius, required this.pickImage});
   final void Function(File image) pickImage;
+  final double radius;
 
   @override
   State<UserImagePicker> createState() => _UserImagePickerState();
 }
 
 class _UserImagePickerState extends State<UserImagePicker> {
-  File? imageFile;
+  File? imageFile = null;
   void pickImage() async {
     final image = await ImagePicker().pickImage(
         source: ImageSource.camera,
-        imageQuality: 50,
+        imageQuality: 200,
         maxWidth: 150,
         maxHeight: 150);
     if (image == null) {
@@ -25,14 +27,15 @@ class _UserImagePickerState extends State<UserImagePicker> {
     setState(() {
       imageFile = File(image.path);
     });
-    widget.pickImage(imageFile!);
+
+    imageFile = null;
   }
 
   @override
   Widget build(BuildContext context) {
     return Column(children: [
       CircleAvatar(
-        radius: 150,
+        radius: widget.radius,
         backgroundColor: Colors.grey,
         foregroundImage: imageFile == null ? null : FileImage(imageFile!),
         child: ClipOval(

@@ -109,7 +109,7 @@ class ChatPage extends StatelessWidget {
                             return MessageBubble.first(
                               message: chatMessage['text'],
                               isMe: currentUser == chatMessage['username'],
-                              userImage: chatMessage['image_url'],
+                              userImage: chatMessage['userImage'],
                               username: chatMessage['username'],
                             );
                           }

@@ -19,7 +19,7 @@ class ProfileSetup extends StatefulWidget {
   @override
   State<ProfileSetup> createState() => _ProfileSetupState();
 }
-dsds
+
 final FirebaseAuth _auth = FirebaseAuth.instance;
 
 class _ProfileSetupState extends State<ProfileSetup> {
@@ -52,6 +52,7 @@ class _ProfileSetupState extends State<ProfileSetup> {
       'image_url': imageUrl,
       'status': textController.text,
     });
+    await FirebaseAuth.instance.currentUser!.updatePhotoURL(imageUrl);
 
     Navigator.of(context).pop();
   }
@@ -67,6 +68,7 @@ class _ProfileSetupState extends State<ProfileSetup> {
           child: Column(
             children: [
               UserImagePicker(
+                radius: 150,
                 pickImage: (image) {
                   _userImageFile = image;
                 },
