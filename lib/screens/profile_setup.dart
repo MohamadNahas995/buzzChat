@@ -52,7 +52,6 @@ class _ProfileSetupState extends State<ProfileSetup> {
       'image_url': imageUrl,
       'status': textController.text,
     });
-    await FirebaseAuth.instance.currentUser!.updatePhotoURL(imageUrl);
 
     Navigator.of(context).pop();
   }

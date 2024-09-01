@@ -58,6 +58,7 @@ class _UsersScreenState extends State<UsersScreen> {
         ]),
       ),
       appBar: AppBar(
+        backgroundColor: const Color.fromARGB(255, 245, 211, 161),
         title: Align(
           alignment: Alignment.centerRight,
           child: Padding(

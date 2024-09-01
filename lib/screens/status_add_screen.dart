@@ -19,6 +19,7 @@ class StatusAddScreen extends StatefulWidget {
 class _StatusAddScreenState extends State<StatusAddScreen> {
   File? _userImageFile;
   final textController = TextEditingController();
+  bool isLoading = false;
 
   String generateRandomString(int len) {
     var r = Random();
@@ -27,6 +28,7 @@ class _StatusAddScreenState extends State<StatusAddScreen> {
   }
 
   void sumbitImage() async {
+    isLoading = true;
     if (_userImageFile == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -38,7 +40,7 @@ class _StatusAddScreenState extends State<StatusAddScreen> {
     final storageRef = FirebaseStorage.instance
         .ref()
         .child('status_images')
-        .child('${generateRandomString}.jpg');
+        .child('${generateRandomString(50)}.jpg');
     await storageRef.putFile(_userImageFile!);
 
     final imageUrl = await storageRef.getDownloadURL();
@@ -51,7 +53,7 @@ class _StatusAddScreenState extends State<StatusAddScreen> {
     });
 
     textController.clear();
-
+    isLoading = false;
     Navigator.of(context).pop();
   }
 
@@ -106,21 +108,28 @@ class _StatusAddScreenState extends State<StatusAddScreen> {
             ),
             Padding(
               padding: const EdgeInsets.only(bottom: 30.0),
-              child: ElevatedButton(
-                style: ButtonStyle(
-                    padding: WidgetStatePropertyAll(EdgeInsets.only(
-                        left: 20, right: 20, top: 10, bottom: 10)),
-                    shape: WidgetStatePropertyAll(RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(25))),
-                    minimumSize: WidgetStatePropertyAll(Size(250, 50)),
-                    backgroundColor: WidgetStatePropertyAll(
-                        const Color.fromARGB(255, 240, 237, 181))),
-                onPressed: sumbitImage,
-                child: Text(
-                  'Submit',
-                  style: TextStyle(fontSize: 18),
-                ),
-              ),
+              child: isLoading
+                  ? CircularProgressIndicator()
+                  : ElevatedButton(
+                      style: ButtonStyle(
+                          padding: WidgetStatePropertyAll(EdgeInsets.only(
+                              left: 20, right: 20, top: 10, bottom: 10)),
+                          shape: WidgetStatePropertyAll(RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(25))),
+                          minimumSize: WidgetStatePropertyAll(Size(250, 50)),
+                          backgroundColor: WidgetStatePropertyAll(
+                              const Color.fromARGB(255, 240, 237, 181))),
+                      onPressed: () {
+                        setState(() {
+                          isLoading = true;
+                        });
+                        sumbitImage();
+                      },
+                      child: Text(
+                        'Submit',
+                        style: TextStyle(fontSize: 18),
+                      ),
+                    ),
             )
           ],
         ),
