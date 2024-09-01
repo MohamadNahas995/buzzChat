@@ -1,6 +1,7 @@
 import 'package:chatty/noNeed/chat.dart';
 import 'package:chatty/screens/chat_page.dart';
 import 'package:chatty/screens/chats_screen.dart';
+import 'package:chatty/screens/status_add_screen.dart';
 import 'package:chatty/screens/status_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -29,6 +30,12 @@ class _UsersScreenState extends State<UsersScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: _selectedIndex == 0
+          ? null
+          : FloatingActionButton(
+              onPressed: () => Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => StatusAddScreen())),
+              child: Icon(Icons.add)),
       drawer: Drawer(
         child: Column(children: [
           Column(
