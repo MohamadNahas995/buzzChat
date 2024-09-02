@@ -1,7 +1,7 @@
-# chatty
+# Buzz Chat
 
-A new Flutter project.
-
+chat application build with flutter 
+using firbase for authintication and storage
 ## Getting Started
 
 This project is a starting point for a Flutter application.
