@@ -4,7 +4,8 @@ A new Flutter project.
 
 ## Getting Started
 
-![alt text]([https://ibb.co/QH03jPf](https://i.ibb.co/vd96v3H/Screenshot-1725422850.png)) ![alt text]([https://ibb.co/QH03jPf](https://i.ibb.co/vd96v3H/Screenshot-1725422850.png))
+![alt text](https://ibb.co/QH03jPf](https://i.ibb.co/vd96v3H/Screenshot-1725422850.png)) ![alt text](https://ibb.co/QH03jPf](https://i.ibb.co/vd96v3H/Screenshot-1725422850.png))
+![screenshot](screenshot.png)
 
 - [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
 - [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
