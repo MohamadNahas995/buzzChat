@@ -1,6 +1,5 @@
 import 'package:chatty/firebase_options.dart';
 import 'package:chatty/screens/auth.dart';
-import 'package:chatty/screens/chat.dart';
 import 'package:chatty/screens/users_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -24,7 +23,7 @@ class MyApp extends StatelessWidget {
         title: 'Flutter Demo',
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(
-            seedColor: Colors.yellow,
+            seedColor: Colors.orange,
           ),
           useMaterial3: true,
         ),

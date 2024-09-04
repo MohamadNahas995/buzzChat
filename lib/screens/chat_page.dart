@@ -27,10 +27,10 @@ class ChatPage extends StatelessWidget {
               Text(otherUser),
               Text(
                 status,
-                style: TextStyle(fontSize: 12),
+                style: const TextStyle(fontSize: 12),
               )
             ]),
-            SizedBox(
+            const SizedBox(
               width: 15,
             ),
             ClipOval(
@@ -43,7 +43,7 @@ class ChatPage extends StatelessWidget {
             ),
           ],
         ),
-        actions: [],
+        actions: const [],
       ),
       body: Column(
         children: [
@@ -84,8 +84,8 @@ class ChatPage extends StatelessWidget {
                     print(conversations);
 
                     return ListView.builder(
-                        padding:
-                            EdgeInsets.only(bottom: 40, right: 13, left: 13),
+                        padding: const EdgeInsets.only(
+                            bottom: 40, right: 13, left: 13),
                         reverse: true,
                         itemCount: conversations.length,
                         itemBuilder: (context, index) {
@@ -109,7 +109,7 @@ class ChatPage extends StatelessWidget {
                             return MessageBubble.first(
                               message: chatMessage['text'],
                               isMe: currentUser == chatMessage['username'],
-                              userImage: chatMessage['image_url'],
+                              userImage: chatMessage['userImage'],
                               username: chatMessage['username'],
                             );
                           }

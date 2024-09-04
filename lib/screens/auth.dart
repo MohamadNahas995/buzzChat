@@ -1,4 +1,4 @@
-import 'package:chatty/screens/chat.dart';
+import 'package:chatty/noNeed/chat.dart';
 import 'package:chatty/screens/profile_setup.dart';
 import 'package:chatty/widgets/user_image_picker.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -34,14 +34,19 @@ class _AuthScreenState extends State<AuthScreen> {
     _formKey.currentState!.save();
 
     if (_isLogin) {
-      final userCredential = await _auth.signInWithEmailAndPassword(
-          email: _emailController.text, password: _passwordController.text);
+      try {
+        final userCredential = await _auth.signInWithEmailAndPassword(
+            email: _emailController.text, password: _passwordController.text);
+      } on FirebaseAuthException catch (e) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(e.message!)));
+      }
     } else {
       final userCredential = await _auth.createUserWithEmailAndPassword(
           email: _emailController.text, password: _passwordController.text);
       userCredential.user!.updateDisplayName(_userNameController.text);
 
-      Navigator.of(context).push(MaterialPageRoute(
+      Navigator.of(context).pushReplacement(MaterialPageRoute(
           builder: (context) => ProfileSetup(
                 emailController: _emailController.text,
                 passwordController: _passwordController.text,
@@ -54,24 +59,24 @@ class _AuthScreenState extends State<AuthScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color.fromARGB(
-          255, 255, 246, 84), //const Color.fromARGB(255, 255, 246, 84),
+          255, 255, 253, 255), //const Color.fromARGB(255, 255, 246, 84),
       body: Center(
         child: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Container(
-                margin:
-                    EdgeInsets.only(top: 30, bottom: 20, left: 20, right: 20),
+                margin: const EdgeInsets.only(
+                    top: 30, bottom: 20, left: 20, right: 20),
                 width: 200,
                 child: Image.asset('assets/chat.png'),
               ),
               Card(
-                color: const Color.fromARGB(255, 250, 244, 198),
-                margin: EdgeInsets.all(20),
+                color: const Color.fromARGB(255, 231, 185, 79),
+                margin: const EdgeInsets.all(20),
                 child: SingleChildScrollView(
                   child: Padding(
-                    padding: EdgeInsets.all(16),
+                    padding: const EdgeInsets.all(16),
                     child: Form(
                         key: _formKey,
                         child: Column(
@@ -90,8 +95,14 @@ class _AuthScreenState extends State<AuthScreen> {
                                       }
                                       return null;
                                     },
-                                    decoration: InputDecoration(
-                                        label: Text('Username')),
+                                    decoration: const InputDecoration(
+                                        label: Text(
+                                      'Username',
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w500),
+                                    )),
                                     enableSuggestions: false,
                                     autocorrect: false,
                                     onSaved: (value) {
@@ -111,7 +122,12 @@ class _AuthScreenState extends State<AuthScreen> {
                                 }
                                 return null;
                               },
-                              decoration: InputDecoration(label: Text('Email')),
+                              decoration: const InputDecoration(
+                                  label: Text('Email',
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w500))),
                               keyboardType: TextInputType.emailAddress,
                               autocorrect: false,
                               textCapitalization: TextCapitalization.none,
@@ -126,31 +142,45 @@ class _AuthScreenState extends State<AuthScreen> {
                                 }
                                 return null;
                               },
-                              decoration:
-                                  InputDecoration(label: Text('password')),
+                              decoration: const InputDecoration(
+                                  label: Text('password',
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w500))),
                               obscureText: true,
                               onSaved: (value) {
                                 _passwordController.text = value!;
                               },
                             ),
-                            SizedBox(
+                            const SizedBox(
                               height: 12,
                             ),
                             ElevatedButton(
-                                style: ButtonStyle(
+                                style: const ButtonStyle(
                                     backgroundColor: WidgetStatePropertyAll(
-                                        Color.fromRGBO(244, 221, 180, 1))),
+                                        Color.fromRGBO(236, 232, 225, 1))),
                                 onPressed: _submit,
-                                child: Text(_isLogin ? 'Login' : 'Sign up')),
+                                child: Text(_isLogin ? 'Login' : 'Sign up',
+                                    style: const TextStyle(
+                                        color: Colors.orange,
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w500))),
                             TextButton(
                                 onPressed: () {
                                   setState(() {
                                     _isLogin = !_isLogin;
                                   });
                                 },
-                                child: Text(_isLogin
-                                    ? 'Create new account'
-                                    : 'Already have an account'))
+                                child: Text(
+                                    _isLogin
+                                        ? 'Create new account'
+                                        : 'Already have an account',
+                                    style: const TextStyle(
+                                        color:
+                                            Color.fromARGB(255, 255, 255, 255),
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w900)))
                           ],
                         )),
                   ),
