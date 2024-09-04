@@ -15,7 +15,6 @@ class ProfileSetup extends StatefulWidget {
   final userNameController;
   final emailController;
   final passwordController;
-
   @override
   State<ProfileSetup> createState() => _ProfileSetupState();
 }
@@ -24,7 +23,7 @@ final FirebaseAuth _auth = FirebaseAuth.instance;
 
 class _ProfileSetupState extends State<ProfileSetup> {
   File? _userImageFile;
-  var _isLoading = false;
+  final _isLoading = false;
   final textController = TextEditingController();
   void sumbitImage() async {
     if (_userImageFile == null) {
@@ -42,7 +41,7 @@ class _ProfileSetupState extends State<ProfileSetup> {
     await storageRef.putFile(_userImageFile!);
 
     final imageUrl = await storageRef.getDownloadURL();
-
+    _auth.currentUser!.updatePhotoURL(imageUrl);
     FirebaseFirestore.instance
         .collection('users')
         .doc(_auth.currentUser!.uid)
@@ -52,7 +51,6 @@ class _ProfileSetupState extends State<ProfileSetup> {
       'image_url': imageUrl,
       'status': textController.text,
     });
-    await FirebaseAuth.instance.currentUser!.updatePhotoURL(imageUrl);
 
     Navigator.of(context).pop();
   }
@@ -61,13 +59,14 @@ class _ProfileSetupState extends State<ProfileSetup> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Complete Profile'),
+        title: const Text('Complete Profile'),
       ),
       body: Center(
         child: SingleChildScrollView(
           child: Column(
             children: [
               UserImagePicker(
+                isStatus: true,
                 radius: 150,
                 pickImage: (image) {
                   _userImageFile = image;
@@ -91,8 +90,8 @@ class _ProfileSetupState extends State<ProfileSetup> {
                   },
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.all(30.0),
+              const Padding(
+                padding: EdgeInsets.all(30.0),
                 child: Text(
                   'please complete your profile  \n by set up an image and status to your profile',
                   textAlign: TextAlign.center,
@@ -103,17 +102,17 @@ class _ProfileSetupState extends State<ProfileSetup> {
                 ),
               ),
               ElevatedButton(
-                style: ButtonStyle(
+                style: const ButtonStyle(
                     minimumSize: WidgetStatePropertyAll(Size(250, 50)),
                     backgroundColor: WidgetStatePropertyAll(
-                        const Color.fromARGB(255, 220, 214, 89))),
+                        Color.fromARGB(255, 220, 214, 89))),
                 onPressed: sumbitImage,
-                child: Text(
+                child: const Text(
                   'Submit',
                   style: TextStyle(fontSize: 18),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               )
             ],
@@ -121,6 +120,5 @@ class _ProfileSetupState extends State<ProfileSetup> {
         ),
       ),
     );
-    ;
   }
 }

@@ -1,93 +1,93 @@
-import 'package:chatty/widgets/user_image_picker.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'dart:io';
+import 'package:intl/intl.dart';
 
-final FirebaseAuth _auth = FirebaseAuth.instance;
-
-class StatusScreen extends StatefulWidget {
+class StatusScreen extends StatelessWidget {
   const StatusScreen({super.key});
 
   @override
-  State<StatusScreen> createState() => _StatusScreenState();
-}
-
-class _StatusScreenState extends State<StatusScreen> {
-  File? _userImageFile;
-  void sumbitImage() async {
-    if (_userImageFile == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please pick an image.'),
-        ),
-      );
-      return;
-    }
-    final storageRef = FirebaseStorage.instance
-        .ref()
-        .child('status_images')
-        .child('${_auth.currentUser!.displayName}.jpg');
-    await storageRef.putFile(_userImageFile!);
-
-    final imageUrl = await storageRef.getDownloadURL();
-    FirebaseFirestore.instance
-        .collection('status')
-        .doc(_auth.currentUser!.displayName)
-        .set({
-      'username': _auth.currentUser!.displayName,
-      'image_url': imageUrl,
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Center(
-            child: UserImagePicker(
-          radius: 80,
-          pickImage: (image) {
-            _userImageFile = image;
-          },
-        )),
-        StreamBuilder(
-            stream: FirebaseFirestore.instance.collection('status').snapshots(),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
-              }
-              if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                return const Center(
-                  child: Text('No status yet!'),
-                );
-              }
-              if (snapshot.hasError) {
-                return const Center(
-                  child: Text('Something went wrong!'),
-                );
-              }
-              final status = snapshot.data!.docs;
-              return Expanded(
-                child: ListView.builder(
-                  itemCount: status.length,
-                  itemBuilder: (context, index) {
-                    return ListTile(
-                      title: Text(status[index]['username']),
-                      leading: CircleAvatar(
-                        backgroundImage: NetworkImage(
-                          status[index]['image_url'],
+    return StreamBuilder(
+        stream: FirebaseFirestore.instance
+            .collection('status')
+            .orderBy('createdAt')
+            .snapshots(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+
+          if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+            return const Center(
+              child: Text('No status yet!'),
+            );
+          }
+
+          if (snapshot.hasError) {
+            return const Center(child: Text('Something went wrong!'));
+          }
+
+          final status = snapshot.data!.docs;
+
+          return ListView.builder(
+              itemBuilder: (context, index) {
+                print(status[index].data()['image_url']);
+                return Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Card(
+                    child: Column(
+                      children: [
+                        ListTile(
+                          subtitle: Padding(
+                            padding: const EdgeInsets.only(top: 2),
+                            child: Text(
+                              DateFormat.yMMMMd()
+                                  .format((status[index].data()['createdAt']
+                                          as Timestamp)
+                                      .toDate())
+                                  .toString(),
+                              style: const TextStyle(
+                                color: Colors.black54,
+                                fontSize: 14,
+                              ),
+                              textAlign: TextAlign.right,
+                            ),
+                          ),
+                          title: Text(
+                            status[index].data()['username'],
+                            textAlign: TextAlign.right,
+                            style: const TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          trailing: CircleAvatar(
+                            child: ClipOval(
+                              child: Image.network(
+                                  status[index].data()['userImg']),
+                            ),
+                          ),
                         ),
-                      ),
-                    );
-                  },
-                ),
-              );
-            })
-      ],
-    );
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 20),
+                            child: Text(
+                              status[index].data()['statusText'],
+                              style: const TextStyle(fontSize: 18),
+                            ),
+                          ),
+                        ),
+                        Image.network(
+                          status[index].data()['image_url'],
+                          fit: BoxFit.cover,
+                          width: 200,
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+              itemCount: status.length);
+        });
   }
 }
