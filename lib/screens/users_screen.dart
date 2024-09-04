@@ -1,9 +1,6 @@
-import 'package:chatty/noNeed/chat.dart';
-import 'package:chatty/screens/chat_page.dart';
 import 'package:chatty/screens/chats_screen.dart';
 import 'package:chatty/screens/status_add_screen.dart';
 import 'package:chatty/screens/status_screen.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -15,10 +12,11 @@ class UsersScreen extends StatefulWidget {
 }
 
 class _UsersScreenState extends State<UsersScreen> {
+  @override
   int _selectedIndex = 0;
-  static List<Widget> _widgetOptions = <Widget>[
-    ChatsScreen(),
-    StatusScreen(),
+  static final List<Widget> _widgetOptions = <Widget>[
+    const ChatsScreen(),
+    const StatusScreen(),
   ];
 
   void _onItemTapped(int index) {
@@ -33,9 +31,9 @@ class _UsersScreenState extends State<UsersScreen> {
       floatingActionButton: _selectedIndex == 0
           ? null
           : FloatingActionButton(
-              onPressed: () => Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => StatusAddScreen())),
-              child: Icon(Icons.add)),
+              onPressed: () => Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => const StatusAddScreen())),
+              child: const Icon(Icons.add)),
       drawer: Drawer(
         child: Column(children: [
           Column(
@@ -53,8 +51,8 @@ class _UsersScreenState extends State<UsersScreen> {
               onPressed: () {
                 FirebaseAuth.instance.signOut();
               },
-              label: Text('Logout'),
-              icon: Icon(Icons.exit_to_app)),
+              label: const Text('Logout'),
+              icon: const Icon(Icons.exit_to_app)),
         ]),
       ),
       appBar: AppBar(

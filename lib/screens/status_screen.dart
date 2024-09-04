@@ -48,7 +48,7 @@ class StatusScreen extends StatelessWidget {
                                           as Timestamp)
                                       .toDate())
                                   .toString(),
-                              style: TextStyle(
+                              style: const TextStyle(
                                 color: Colors.black54,
                                 fontSize: 14,
                               ),
@@ -58,7 +58,7 @@ class StatusScreen extends StatelessWidget {
                           title: Text(
                             status[index].data()['username'],
                             textAlign: TextAlign.right,
-                            style: TextStyle(fontWeight: FontWeight.bold),
+                            style: const TextStyle(fontWeight: FontWeight.bold),
                           ),
                           trailing: CircleAvatar(
                             child: ClipOval(
@@ -73,13 +73,14 @@ class StatusScreen extends StatelessWidget {
                             padding: const EdgeInsets.only(left: 20),
                             child: Text(
                               status[index].data()['statusText'],
-                              style: TextStyle(fontSize: 18),
+                              style: const TextStyle(fontSize: 18),
                             ),
                           ),
                         ),
                         Image.network(
                           status[index].data()['image_url'],
                           fit: BoxFit.cover,
+                          width: 200,
                         ),
                       ],
                     ),

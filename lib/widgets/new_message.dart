@@ -23,13 +23,6 @@ class _NewMessageState extends State<NewMessage> {
     final enteredMessage = _messageController.text;
 
     if (enteredMessage.trim().isEmpty) {
-      print(
-        FirebaseAuth.instance.currentUser!.displayName,
-      );
-      print(
-        FirebaseAuth.instance.currentUser!.email,
-      );
-      print(FirebaseAuth.instance.currentUser!.uid);
       return;
     }
     _messageController.clear();
@@ -51,22 +44,22 @@ class _NewMessageState extends State<NewMessage> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(left: 15, right: 1, bottom: 14),
+      padding: const EdgeInsets.only(left: 15, right: 1, bottom: 14),
       child: Row(
         children: [
           Expanded(
               child: TextField(
                   controller: _messageController,
                   textCapitalization: TextCapitalization.sentences,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Send a message...',
-                    border: const OutlineInputBorder(
+                    border: OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.circular(10)),
                     ),
                   ))),
           IconButton(
             onPressed: submitMessage,
-            icon: Icon(Icons.send),
+            icon: const Icon(Icons.send),
           )
         ],
       ),

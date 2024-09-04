@@ -34,14 +34,19 @@ class _AuthScreenState extends State<AuthScreen> {
     _formKey.currentState!.save();
 
     if (_isLogin) {
-      final userCredential = await _auth.signInWithEmailAndPassword(
-          email: _emailController.text, password: _passwordController.text);
+      try {
+        final userCredential = await _auth.signInWithEmailAndPassword(
+            email: _emailController.text, password: _passwordController.text);
+      } on FirebaseAuthException catch (e) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(e.message!)));
+      }
     } else {
       final userCredential = await _auth.createUserWithEmailAndPassword(
           email: _emailController.text, password: _passwordController.text);
       userCredential.user!.updateDisplayName(_userNameController.text);
 
-      Navigator.of(context).push(MaterialPageRoute(
+      Navigator.of(context).pushReplacement(MaterialPageRoute(
           builder: (context) => ProfileSetup(
                 emailController: _emailController.text,
                 passwordController: _passwordController.text,
@@ -61,17 +66,17 @@ class _AuthScreenState extends State<AuthScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Container(
-                margin:
-                    EdgeInsets.only(top: 30, bottom: 20, left: 20, right: 20),
+                margin: const EdgeInsets.only(
+                    top: 30, bottom: 20, left: 20, right: 20),
                 width: 200,
                 child: Image.asset('assets/chat.png'),
               ),
               Card(
                 color: const Color.fromARGB(255, 231, 185, 79),
-                margin: EdgeInsets.all(20),
+                margin: const EdgeInsets.all(20),
                 child: SingleChildScrollView(
                   child: Padding(
-                    padding: EdgeInsets.all(16),
+                    padding: const EdgeInsets.all(16),
                     child: Form(
                         key: _formKey,
                         child: Column(
@@ -90,7 +95,7 @@ class _AuthScreenState extends State<AuthScreen> {
                                       }
                                       return null;
                                     },
-                                    decoration: InputDecoration(
+                                    decoration: const InputDecoration(
                                         label: Text(
                                       'Username',
                                       style: TextStyle(
@@ -117,7 +122,7 @@ class _AuthScreenState extends State<AuthScreen> {
                                 }
                                 return null;
                               },
-                              decoration: InputDecoration(
+                              decoration: const InputDecoration(
                                   label: Text('Email',
                                       style: TextStyle(
                                           color: Colors.white,
@@ -137,7 +142,7 @@ class _AuthScreenState extends State<AuthScreen> {
                                 }
                                 return null;
                               },
-                              decoration: InputDecoration(
+                              decoration: const InputDecoration(
                                   label: Text('password',
                                       style: TextStyle(
                                           color: Colors.white,
@@ -148,16 +153,16 @@ class _AuthScreenState extends State<AuthScreen> {
                                 _passwordController.text = value!;
                               },
                             ),
-                            SizedBox(
+                            const SizedBox(
                               height: 12,
                             ),
                             ElevatedButton(
-                                style: ButtonStyle(
+                                style: const ButtonStyle(
                                     backgroundColor: WidgetStatePropertyAll(
                                         Color.fromRGBO(236, 232, 225, 1))),
                                 onPressed: _submit,
                                 child: Text(_isLogin ? 'Login' : 'Sign up',
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                         color: Colors.orange,
                                         fontSize: 18,
                                         fontWeight: FontWeight.w500))),
@@ -171,9 +176,9 @@ class _AuthScreenState extends State<AuthScreen> {
                                     _isLogin
                                         ? 'Create new account'
                                         : 'Already have an account',
-                                    style: TextStyle(
-                                        color: const Color.fromARGB(
-                                            255, 255, 255, 255),
+                                    style: const TextStyle(
+                                        color:
+                                            Color.fromARGB(255, 255, 255, 255),
                                         fontSize: 18,
                                         fontWeight: FontWeight.w900)))
                           ],
