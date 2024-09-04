@@ -15,3 +15,4 @@ For help getting started with Flutter development, view the
 [online documentation](https://docs.flutter.dev/), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
 ![alt text](https://i.ibb.co/vkjwZB8/Buzz-Talk.jpg)
+![Screenshot_1725084577](https://github.com/user-attachments/assets/9418174b-76df-43d2-b4e4-283fb3849714)
